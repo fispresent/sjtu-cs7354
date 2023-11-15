@@ -1,0 +1,79 @@
+# 拉取仓库到本地
+git clone git@github.com:fispresent/sjtu-cs7354.git
+cd sjtu-cs7354
+
+# 任务一
+## 创建新的分支
+git checkout -b feature-newFunc  # 创建一个名为feature-newFunc的新分支，并切换到这个分支
+## 在feature-newFunc分支上进行两次提交
+### 第一次提交在diary.txt文件中（mydiary文件夹下），添加以下条目：2023-10-28: Started developing a new feature.
+echo -e "\n2023-10-28: Started developing a new feature." >> ./mydiary/diary.txt
+git add ./mydiary/diary.txt
+git commit -m "Added diary entry for feature work"
+### 第二次提交再次在diary.txt文件中，添加以下条目：2023-10-29: Continued work on the new feature.
+echo "2023-10-29: Continued work on the new feature." >> ./mydiary/diary.txt
+git add ./mydiary/diary.txt
+git commit -m "Added another diary entry for feature work"
+## 合并feature-newFunc分支上的两次提交，并合并整个功能到main分支。
+git rebase -i HEAD~2 # 在其中使用s合并commit
+git checkout main
+git merge feature-newFunc
+git push --all
+
+# 任务二
+## 确保你处于最新的main分支上
+git checkout main
+git pull origin main
+## 从experiment分支上获取所需更改
+git checkout experiment
+git log # 获取所需更改的Hash
+## 应用选中的提交（请选择第一次commit（comment为：Added new approach details.））到main分支
+git checkout main
+git cherry-pick d58314c014e17c0f8091e4f715836e14815e443d
+## 上传更改到远程仓库
+git push --all
+
+# 任务三
+## 确保在正确的分支上进行操作
+git checkout dev
+## 检查当前的提交历史
+git log
+## 回退到目标提交，并再次提交
+git revert 7e9812494f2c2df534060a71792962be4d5cbab8 1a5d6d2f1f36d128e6b9a6a2236fdc0d1113638e # 会保留错误的提交记录
+## 确认更改
+git log
+## 推送到远程仓库
+git push --all
+
+# 任务四
+## 在main分支上提交修改
+### 切换到main分支，在styles.css文件中修改body的字体（第一行）为：body { font-family: 'Times New Roman'; }
+git checkout main
+打开文件修改内容
+### 提交这个修改
+git add ./frontend/styles.css
+git commit -m "Change styles.css"
+## 切换到feature-upload分支
+git checkout feature-upload
+## 查看feature-upload与main分支之间的差异
+git diff feature-upload main
+## 决定是否合并feature-upload分支到main。如果有合并冲突，请解决冲突后合并
+git checkout main
+git merge feature-upload
+解决冲突
+git add .
+git commit -m "Merge feature-upload into main"
+git push --all
+
+# 任务五
+## 切换到documentation分支
+git switch documentation
+## 开始交互式重组
+git rebase -i HEAD~4
+## 重新排列、合并提交
+调整commit位置、合并commit
+## 完成重组后，将更改合并回main分支
+git checkout main
+git merge documentation
+## 将更改push回远程仓库
+git push --all --force-with-lease
